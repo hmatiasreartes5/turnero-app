@@ -1,5 +1,7 @@
 import { Outlet, NavLink } from 'react-router-dom'
 import { Home, Calendar, Users, Settings } from 'lucide-react'
+import InstallBanner from '@/components/InstallBanner'
+import UpdateToast from '@/components/UpdateToast'
 
 const tabs = [
   { to: '/', icon: Home, label: 'Inicio' },
@@ -14,6 +16,9 @@ export default function Layout() {
       <main className="flex-1 overflow-y-auto pb-20">
         <Outlet />
       </main>
+
+      <InstallBanner />
+      <UpdateToast />
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-md justify-around">
