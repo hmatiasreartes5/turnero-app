@@ -72,7 +72,7 @@ const horariosSchema = z.object({
 
 export const configuracionSchema = z.object({
   id: z.literal(1),
-  nombreProfesional: z.string().min(1, 'Nombre requerido'),
+  nombreProfesional: z.string(),
   duracionTurnoMinutos: z.number().int().min(5).max(480),
   horarios: horariosSchema,
   diasBloqueados: z.array(z.string().regex(FECHA_REGEX)),

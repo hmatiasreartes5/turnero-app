@@ -1,6 +1,10 @@
+import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { format } from 'date-fns'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { configRepo } from '@/repositories/config.repo'
+import BackupManager from '@/components/BackupManager'
 import type { DiaSemana } from '@/types'
 
 const DIAS: { key: DiaSemana; label: string }[] = [
@@ -17,6 +21,9 @@ const DURACIONES = [15, 30, 45, 60]
 
 export default function Configuracion() {
   const config = useLiveQuery(() => configRepo.get(), [])
+  const [nuevoDiaBloqueado, setNuevoDiaBloqueado] = useState('')
+  const [nuevoPrecioNombre, setNuevoPrecioNombre] = useState('')
+  const [nuevoPrecioValor, setNuevoPrecioValor] = useState('')
 
   if (!config) {
     return (
@@ -46,8 +53,35 @@ export default function Configuracion() {
     await configRepo.update({ horarios })
   }
 
+  const agregarDiaBloqueado = async () => {
+    if (!nuevoDiaBloqueado) return
+    const dias = [...config.diasBloqueados, nuevoDiaBloqueado].sort()
+    await configRepo.update({ diasBloqueados: dias })
+    setNuevoDiaBloqueado('')
+  }
+
+  const quitarDiaBloqueado = async (fecha: string) => {
+    await configRepo.update({
+      diasBloqueados: config.diasBloqueados.filter((d) => d !== fecha),
+    })
+  }
+
+  const agregarPrecio = async () => {
+    if (!nuevoPrecioNombre || !nuevoPrecioValor) return
+    const precios = { ...config.precios, [nuevoPrecioNombre]: Number(nuevoPrecioValor) }
+    await configRepo.update({ precios })
+    setNuevoPrecioNombre('')
+    setNuevoPrecioValor('')
+  }
+
+  const quitarPrecio = async (nombre: string) => {
+    const precios = { ...config.precios }
+    delete precios[nombre]
+    await configRepo.update({ precios })
+  }
+
   return (
-    <div className="p-4">
+    <div className="p-4 pb-24">
       <h1 className="mb-6 text-2xl font-bold">Configuración</h1>
 
       <div className="flex flex-col gap-6">
@@ -108,7 +142,78 @@ export default function Configuracion() {
           </div>
         </div>
 
+        {/* Días bloqueados */}
+        <div>
+          <label className="mb-1 block text-sm font-medium">Días bloqueados (feriados, vacaciones)</label>
+          <div className="flex gap-2">
+            <Input
+              type="date"
+              value={nuevoDiaBloqueado}
+              onChange={(e) => setNuevoDiaBloqueado(e.target.value)}
+              className="flex-1"
+            />
+            <Button size="sm" onClick={agregarDiaBloqueado}>Agregar</Button>
+          </div>
+          {config.diasBloqueados.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1">
+              {config.diasBloqueados.map((fecha) => (
+                <span
+                  key={fecha}
+                  className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs"
+                >
+                  {format(new Date(fecha + 'T12:00:00'), 'dd/MM/yyyy')}
+                  <button onClick={() => quitarDiaBloqueado(fecha)} className="text-destructive hover:text-destructive/80">
+                    &times;
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
 
+        {/* Precios por cobertura */}
+        <div>
+          <label className="mb-1 block text-sm font-medium">Precios por cobertura</label>
+          <div className="flex gap-2">
+            <Input
+              placeholder="Ej: OSDE"
+              value={nuevoPrecioNombre}
+              onChange={(e) => setNuevoPrecioNombre(e.target.value)}
+              className="flex-1"
+            />
+            <Input
+              type="number"
+              placeholder="$"
+              value={nuevoPrecioValor}
+              onChange={(e) => setNuevoPrecioValor(e.target.value)}
+              className="w-24"
+            />
+            <Button size="sm" onClick={agregarPrecio}>Agregar</Button>
+          </div>
+          {Object.entries(config.precios).length > 0 && (
+            <div className="mt-2 flex flex-col gap-1">
+              {Object.entries(config.precios).map(([nombre, valor]) => (
+                <div key={nombre} className="flex items-center justify-between rounded-md border px-3 py-2 text-sm">
+                  <span>{nombre}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground">${valor.toLocaleString()}</span>
+                    <button onClick={() => quitarPrecio(nombre)} className="text-destructive hover:text-destructive/80">
+                      &times;
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Backup */}
+        <BackupManager />
+
+        {/* Versión */}
+        <p className="text-center text-xs text-muted-foreground">
+          Turnero v0.1.0
+        </p>
       </div>
     </div>
   )

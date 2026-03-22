@@ -4,6 +4,7 @@ import { es } from 'date-fns/locale'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import TurnoCard from '@/components/TurnoCard'
+import BackupReminder from '@/components/BackupReminder'
 import { useTurnosDelDia } from '@/hooks/useTurnosDelDia'
 
 export default function Dashboard() {
@@ -16,6 +17,7 @@ export default function Dashboard() {
 
   return (
     <div className="p-4">
+      <BackupReminder />
       <div className="mb-4">
         <h1 className="text-2xl font-bold capitalize">{fechaDisplay}</h1>
         {turnosActivos && (
