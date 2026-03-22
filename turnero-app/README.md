@@ -1,73 +1,94 @@
-# React + TypeScript + Vite
+# Turnero
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![CI](https://github.com/hmatiasreartes5/turnero-app/actions/workflows/ci.yml/badge.svg)](https://github.com/hmatiasreartes5/turnero-app/actions/workflows/ci.yml)
 
-Currently, two official plugins are available:
+App offline para kinesiólogos independientes. Gestiona turnos, pacientes y configuración desde el celular, sin internet y sin costo.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **Agenda visual** — Calendario mensual con indicadores de turnos por día
+- **Gestión de turnos** — Crear, completar, cancelar, reprogramar con un tap
+- **Pacientes** — Ficha con datos, obra social e historial de turnos
+- **Disponibilidad automática** — Calcula horarios libres según tu configuración
+- **Backup manual** — Exportar/importar datos en JSON desde el menú compartir
+- **100% offline** — Todo funciona sin conexión, datos en el dispositivo
+- **Instalable** — Se instala como app nativa desde el navegador (PWA)
+- **Dark mode** — Sigue la preferencia del sistema
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack
 
-## Expanding the ESLint configuration
+| | Tecnología |
+|---|---|
+| Framework | React 19 + Vite 8 |
+| Lenguaje | TypeScript (strict) |
+| Estilos | Tailwind CSS 4 |
+| UI | shadcn/ui |
+| DB local | Dexie.js (IndexedDB) |
+| Routing | React Router v6 |
+| Estado | Zustand |
+| PWA | vite-plugin-pwa (Workbox) |
+| Formularios | React Hook Form + Zod |
+| Testing | Vitest + Testing Library |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Requisitos
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js 18+ (recomendado 20)
+- npm 9+
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Instalación
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone https://github.com/hmatiasreartes5/turnero-app.git
+cd turnero-app/turnero-app
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev        # Servidor de desarrollo
+npm run build      # Build de producción
+npm run test       # Tests unitarios + integración
+npm run test:watch # Tests en modo watch
+npm run lint       # ESLint
+npm run preview    # Preview del build
 ```
+
+## Estructura
+
+```
+src/
+├── components/    # Componentes reutilizables (Layout, TurnoCard, etc.)
+├── hooks/         # Custom hooks (useTurnosDelDia, usePacienteSearch)
+├── pages/         # Páginas (Dashboard, Agenda, Pacientes, Config, etc.)
+├── repositories/  # Acceso a datos (paciente.repo, turno.repo, config.repo)
+├── services/      # Lógica de negocio (disponibilidad, backup, notifications)
+├── stores/        # Zustand stores (estado UI)
+├── types/         # Interfaces TypeScript
+└── utils/         # Helpers (validators, dates)
+```
+
+## Instalar como PWA
+
+### iPhone (Safari)
+1. Abrí la app en Safari
+2. Tocá el botón compartir (cuadrado con flecha)
+3. Seleccioná "Agregar a pantalla de inicio"
+
+### Android (Chrome)
+1. Abrí la app en Chrome
+2. Tocá el menú (tres puntos)
+3. Seleccioná "Instalar app"
+
+## Backup
+
+Los datos se almacenan localmente en IndexedDB. Para resguardarlos:
+
+1. Ir a **Config** > **Exportar datos**
+2. Se genera un archivo JSON que podés compartir o guardar
+3. Para restaurar: **Config** > **Importar datos** > seleccionar el archivo
+
+## Licencia
+
+MIT
