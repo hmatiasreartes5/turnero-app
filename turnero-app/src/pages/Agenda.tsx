@@ -48,7 +48,13 @@ export default function Agenda() {
 
   return (
     <div className="p-4">
-      <h1 className="mb-4 text-2xl font-bold">Agenda</h1>
+      <div className="mb-4 flex items-center gap-2">
+        <div className="h-6 w-1 rounded-full bg-primary" />
+        <div>
+          <h1 className="text-2xl font-bold leading-tight">Agenda</h1>
+          <p className="text-xs text-muted-foreground">Calendario y turnos</p>
+        </div>
+      </div>
 
       <div className="mb-4 flex justify-center">
         <DayPicker

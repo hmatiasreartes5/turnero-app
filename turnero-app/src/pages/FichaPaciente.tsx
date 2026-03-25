@@ -101,7 +101,13 @@ export default function FichaPaciente() {
         <button onClick={() => navigate(-1)}>
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="text-lg font-bold">Ficha del paciente</h1>
+        <div className="flex items-center gap-2">
+          <div className="h-5 w-1 rounded-full bg-primary" />
+          <div>
+            <h1 className="text-lg font-bold leading-tight">Ficha del paciente</h1>
+            <p className="text-[11px] text-muted-foreground">Datos e historial</p>
+          </div>
+        </div>
       </header>
 
       <div className="flex flex-col gap-5 p-4">

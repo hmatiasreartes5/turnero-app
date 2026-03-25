@@ -145,10 +145,21 @@ Una aplicación móvil que funciona **100% sin internet** para gestionar agenda 
 ### 5.2 Pantallas
 
 #### Home / Dashboard
-- **Qué ve el usuario**: fecha de hoy, cantidad de turnos, lista de turnos como cards ordenados por hora.
-- **Cada card muestra**: hora, nombre del paciente, obra social, estado (color).
-- **Acciones**: tocar card → detalle del turno. Botón "+" flotante → nuevo turno.
-- **Estado vacío**: mensaje "No tenés turnos para hoy" con botón para crear uno.
+- **Saludo**: muestra "Hola, [nombre profesional]" y la fecha del día capitalizada.
+- **Próximo turno destacado**: card teal con hora y cuenta regresiva ("en 45 min"). Clickeable → detalle del turno.
+- **Turnos del día**: lista de turnos como cards ordenados por hora (excluye cancelados).
+- **Cada card muestra**: hora inicio/fin, nombre del paciente con obra social entre paréntesis (ej: "Reartes, Matias (OSDE)"), notas del turno, estado (badge con color).
+- **Stats de la semana**: 3 cards con turnos totales, pacientes registrados y tasa de asistencia.
+- **Estadísticas detalladas**: 6 cards en grid 2 columnas:
+  - Ocupación semanal (barra de progreso con %)
+  - Cancelaciones del mes (cancelados + ausencias, barra roja)
+  - Próximos turnos libres (3 slots clickeables → nuevo turno precargado)
+  - Día más demandado (día de la semana con más turnos históricos)
+  - Distribución por obra social del mes (barras de progreso por cada OS)
+  - Facturación estimada del mes (turnos completados × precio por obra social)
+- **Acciones**: tocar card de turno → detalle. Botón "+" flotante → nuevo turno.
+- **Estado vacío**: mensaje "Tu agenda está libre" con botón para agendar turno.
+- **Recordatorio de backup**: banner si hace más de 7 días sin backup.
 
 #### Agenda (Calendario)
 - **Vista mes**: calendario con indicadores (puntos o números) en días con turnos.
@@ -157,14 +168,15 @@ Una aplicación móvil que funciona **100% sin internet** para gestionar agenda 
 - **Navegación**: flechas para mes anterior/siguiente.
 
 #### Nuevo Turno
+- **Layout**: secciones organizadas en Cards con grid 2 columnas (Fecha + Duración, Paciente + Notas). Horario ocupa ancho completo.
 - **Campos**: fecha (selector), hora de inicio (solo horarios disponibles), duración (selector con default de configuración), paciente (buscador).
 - **Duración**: selector con opciones predefinidas (15, 30, 45, 60 min). El default viene de Configuración pero se puede cambiar por turno.
-- **Búsqueda de paciente**: campo con autocomplete por nombre/apellido/DNI.
-  - Si encuentra: muestra nombre y datos resumidos.
-  - Si no encuentra: muestra opción "Crear paciente nuevo" que expande formulario inline (nombre, apellido, DNI y teléfono obligatorios).
+- **Paciente**: primero se muestra botón "Crear paciente nuevo" (destacado con ícono y borde teal), debajo el buscador autocomplete por nombre/apellido/DNI (máximo 5 resultados, se cierra al tocar fuera).
+  - Si encuentra: muestra nombre y datos resumidos con opción "Cambiar".
+  - Crear paciente nuevo: expande formulario inline (nombre, apellido, DNI y teléfono obligatorios; obra social opcional).
 - **Campos opcionales**: notas.
 - **Validaciones**: no permitir turno en slot ocupado, no permitir turno fuera de horario de atención, no permitir turno en día bloqueado, no permitir turno en el pasado.
-- **Acción**: botón "Confirmar turno".
+- **Acción**: botón "Confirmar turno" fijo en footer inferior, centrado con ancho máximo.
 
 #### Detalle del Turno
 - **Qué ve el usuario**: fecha, hora, duración, paciente (nombre + datos), obra social, estado, notas.
@@ -176,25 +188,28 @@ Una aplicación móvil que funciona **100% sin internet** para gestionar agenda 
 - **Link**: tocar nombre del paciente → ficha del paciente.
 
 #### Pacientes (lista)
-- **Barra de búsqueda** prominente arriba.
-- **Lista scrollable** ordenada alfabéticamente (apellido, nombre).
-- **Cada item**: nombre completo, DNI, obra social.
+- **Header**: título con barrita teal + subtítulo "Listado y fichas". Botón "Agregar paciente" (primary, con ícono +).
+- **Barra de búsqueda** prominente con ícono lupa.
+- **Lista scrollable** ordenada alfabéticamente (apellido, nombre). Cada paciente dentro de una Card blanca con borde.
+- **Cada item**: avatar con iniciales (fondo teal suave), nombre completo, DNI, obra social.
 - **Tocar item** → ficha del paciente.
-- **Estado vacío**: "No tenés pacientes cargados. Se crean automáticamente al agendar turnos."
+- **Estado vacío**: "No hay pacientes registrados" / "Sin resultados" según contexto.
 
 #### Ficha del Paciente
-- **Datos personales** (editables): nombre*, apellido*, DNI*, teléfono*, email, obra social, notas. (*obligatorios)
+- **Datos personales** (editables): nombre*, apellido*, DNI*, teléfono*, email, obra social, número de afiliado, notas clínicas. (*obligatorios)
+- **Vista**: obra social se muestra con número de afiliado entre paréntesis (ej: "OSDE (12345)").
 - **Historial de turnos**: lista cronológica (más recientes primero) con fecha, hora, estado.
 - **Acciones**: editar datos, agendar turno para este paciente.
 
 #### Configuración
+- **Layout**: secciones organizadas en Cards con grid 2 columnas (Nombre + Duración, Días de atención + Días bloqueados, Precios + Backup).
 - **Secciones**:
   - Nombre del profesional.
-  - Duración estándar del turno (ej: 30 min, 45 min, 60 min).
-  - Horarios de atención por día (ej: Lunes 8:00-12:00 y 14:00-18:00).
-  - Días bloqueados (selector de fechas, con opción de agregar/quitar).
-  - Precios por cobertura (lista editable: obra social → precio).
-  - Backup: botones "Exportar datos" e "Importar datos".
+  - Duración estándar del turno (15, 30, 45, 60 min con botones seleccionables).
+  - Días de atención por día de la semana (toggle activo/inactivo, horarios default 08:00-12:00 / 14:00-18:00).
+  - Días bloqueados (selector de fecha + lista con chips removibles).
+  - Precios por cobertura (lista editable: obra social → precio, no permite valores negativos).
+  - Backup: botones "Exportar datos" e "Importar datos" con último backup y diálogo de confirmación.
 
 ---
 
@@ -230,7 +245,7 @@ Una aplicación móvil que funciona **100% sin internet** para gestionar agenda 
 
 | Regla | Descripción |
 |-------|-------------|
-| RN-08 | Nombre, apellido, DNI y teléfono son obligatorios. Email y obra social son opcionales. |
+| RN-08 | Nombre, apellido, DNI y teléfono son obligatorios. Email, obra social, número de afiliado y notas son opcionales. |
 | RN-09 | El DNI debe ser único. No pueden existir dos pacientes con el mismo DNI. |
 | RN-10 | No se puede eliminar un paciente que tiene turnos asociados. |
 | RN-11 | Un paciente se puede crear de forma standalone o durante la creación de un turno. |
@@ -318,9 +333,11 @@ Una aplicación móvil que funciona **100% sin internet** para gestionar agenda 
 
 ### Could Have
 - Resumen nocturno de turnos del día siguiente (breve: cantidad + hora del primero)
-- Notas clínicas en ficha de paciente
-- Estadísticas básicas (turnos por mes, ausentismo, ingresos)
 - Búsqueda global (buscar en toda la app)
+
+### Implementado (originalmente Could Have)
+- Notas clínicas en ficha de paciente
+- Estadísticas en Dashboard: ocupación semanal, tasa de cancelación, próximos turnos libres, día más demandado, distribución por obra social, facturación estimada del mes
 
 ### Won't Have (por ahora)
 - Multiusuario / compartir agenda
@@ -379,7 +396,24 @@ Una aplicación móvil que funciona **100% sin internet** para gestionar agenda 
 
 ---
 
-## 13. Decisiones Tomadas
+## 13. Diseño Visual y UX
+
+### Paleta de colores
+- **Primary**: teal/verde azulado (oklch 0.50, 0.14, 175) — transmite salud, calma, profesionalismo.
+- **Fondo**: gris muy suave con tinte teal (no blanco puro) — las cards blancas resaltan sobre el fondo.
+- **Destructive**: rojo para acciones destructivas y errores.
+- **Dark mode**: preparado con la misma paleta teal adaptada.
+
+### Componentes visuales
+- **Cards**: todas las secciones de contenido están dentro de Cards blancas con borde y shadow on hover. Esto genera contraste con el fondo teal suave.
+- **Títulos de sección**: barrita teal vertical al costado izquierdo + título + subtítulo descriptivo en gris (ej: "Agenda" / "Calendario y turnos").
+- **Layout responsive**: secciones en grid 2 columnas (`sm:grid-cols-2`) que se apilan en móvil.
+- **Tipografía**: font Geist Variable (sans-serif).
+- **Badges de estado**: pills con color por estado (azul=confirmado, verde=completado, rojo=cancelado, ámbar=no asistió).
+
+---
+
+## 14. Decisiones Tomadas
 
 > Puntos que fueron evaluados y resueltos durante la definición del spec.
 

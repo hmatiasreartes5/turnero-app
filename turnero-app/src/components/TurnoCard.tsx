@@ -36,11 +36,8 @@ export default function TurnoCard({ turno }: TurnoCardProps) {
 
         <div className="flex-1 min-w-0">
           <p className="truncate font-medium">
-            {paciente ? `${paciente.apellido}, ${paciente.nombre}` : 'Cargando...'}
+            {paciente ? `${paciente.apellido}, ${paciente.nombre}${paciente.obraSocial ? ` (${paciente.obraSocial})` : ''}` : 'Cargando...'}
           </p>
-          {paciente?.obraSocial && (
-            <p className="truncate text-xs text-muted-foreground">{paciente.obraSocial}</p>
-          )}
           {turno.notas && (
             <p className="truncate text-xs text-muted-foreground">{turno.notas}</p>
           )}

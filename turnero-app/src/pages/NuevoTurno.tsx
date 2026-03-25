@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { format } from 'date-fns'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, UserPlus } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Card, CardContent } from '@/components/ui/card'
 import HorarioSelector from '@/components/HorarioSelector'
 import PacienteAutocomplete from '@/components/PacienteAutocomplete'
 import { turnoRepo } from '@/repositories/turno.repo'
@@ -104,110 +105,148 @@ export default function NuevoTurno() {
         <button onClick={() => navigate(-1)}>
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="text-lg font-bold">Nuevo turno</h1>
+        <div className="flex items-center gap-2">
+          <div className="h-5 w-1 rounded-full bg-primary" />
+          <div>
+            <h1 className="text-lg font-bold leading-tight">Nuevo turno</h1>
+            <p className="text-[11px] text-muted-foreground">Agendar cita</p>
+          </div>
+        </div>
       </header>
 
-      <div className="flex flex-col gap-5 p-4">
-        {/* Fecha */}
-        <div>
-          <label className="mb-1 block text-sm font-medium">Fecha</label>
-          <Input
-            type="date"
-            value={fecha}
-            onChange={(e) => {
-              setFecha(e.target.value)
-              setHoraInicio('')
-            }}
-          />
-        </div>
-
-        {/* Duración */}
-        <div>
-          <label className="mb-1 block text-sm font-medium">Duración</label>
-          <div className="flex gap-2">
-            {DURACIONES.map((d) => (
-              <button
-                key={d}
-                type="button"
-                onClick={() => {
-                  setDuracion(d)
+      <div className="flex flex-col gap-4 p-4 pb-24">
+        {/* Fila 1: Fecha + Duración */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Card>
+            <CardContent className="p-4">
+              <label className="mb-2 block text-sm font-semibold">Fecha</label>
+              <Input
+                type="date"
+                value={fecha}
+                onChange={(e) => {
+                  setFecha(e.target.value)
                   setHoraInicio('')
                 }}
-                className={`flex-1 rounded-md border px-2 py-1.5 text-sm transition-colors ${
-                  duracion === d
-                    ? 'border-primary bg-primary text-primary-foreground'
-                    : 'border-border hover:border-primary'
-                }`}
-              >
-                {d} min
-              </button>
-            ))}
-          </div>
+              />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <label className="mb-2 block text-sm font-semibold">Duración</label>
+              <div className="flex gap-2">
+                {DURACIONES.map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() => {
+                      setDuracion(d)
+                      setHoraInicio('')
+                    }}
+                    className={`flex-1 rounded-md border px-2 py-1.5 text-sm transition-colors ${
+                      duracion === d
+                        ? 'border-primary bg-primary text-primary-foreground'
+                        : 'border-border hover:border-primary'
+                    }`}
+                  >
+                    {d} min
+                  </button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Horario */}
-        <div>
-          <label className="mb-1 block text-sm font-medium">Horario</label>
-          {fecha ? (
-            <HorarioSelector
-              fecha={fecha}
-              duracion={duracion}
-              value={horaInicio}
-              onChange={setHoraInicio}
-            />
-          ) : (
-            <p className="text-sm text-muted-foreground">Seleccioná una fecha primero</p>
-          )}
-        </div>
+        <Card>
+          <CardContent className="p-4">
+            <label className="mb-2 block text-sm font-semibold">Horario</label>
+            {fecha ? (
+              <HorarioSelector
+                fecha={fecha}
+                duracion={duracion}
+                value={horaInicio}
+                onChange={setHoraInicio}
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground">Seleccioná una fecha primero</p>
+            )}
+          </CardContent>
+        </Card>
 
-        {/* Paciente */}
-        <div>
-          <label className="mb-1 block text-sm font-medium">Paciente</label>
-          <PacienteAutocomplete
-            value={pacienteId}
-            onChange={(id) => {
-              setPacienteId(id)
-              setMostrarNuevoPaciente(false)
-            }}
-          />
-          {!pacienteId && (
-            <button
-              type="button"
-              onClick={() => setMostrarNuevoPaciente(!mostrarNuevoPaciente)}
-              className="mt-2 text-sm text-primary hover:underline"
-            >
-              {mostrarNuevoPaciente ? 'Cancelar' : 'Crear paciente nuevo'}
-            </button>
-          )}
-        </div>
+        {/* Fila 3: Paciente + Notas */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Card className="overflow-visible">
+            <CardContent className="p-4">
+              <label className="mb-2 block text-sm font-semibold">Paciente</label>
 
-        {/* Nuevo paciente inline */}
-        {mostrarNuevoPaciente && !pacienteId && (
-          <div className="rounded-lg border bg-muted/50 p-3">
-            <p className="mb-3 text-sm font-medium">Nuevo paciente</p>
-            <div className="flex flex-col gap-2">
-              <Input placeholder="Nombre *" value={npNombre} onChange={(e) => setNpNombre(e.target.value)} />
-              <Input placeholder="Apellido *" value={npApellido} onChange={(e) => setNpApellido(e.target.value)} />
-              <Input placeholder="DNI *" value={npDni} onChange={(e) => setNpDni(e.target.value)} />
-              <Input placeholder="Teléfono *" value={npTelefono} onChange={(e) => setNpTelefono(e.target.value)} />
-              <Input placeholder="Obra social (opcional)" value={npObraSocial} onChange={(e) => setNpObraSocial(e.target.value)} />
-            </div>
-          </div>
-        )}
+              {/* Botón crear paciente primero, bien visible */}
+              {!pacienteId && !mostrarNuevoPaciente && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setMostrarNuevoPaciente(true)}
+                  className="mb-3 w-full border-primary text-primary hover:bg-primary/10"
+                >
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Crear paciente nuevo
+                </Button>
+              )}
 
-        {/* Notas */}
-        <div>
-          <label className="mb-1 block text-sm font-medium">Notas (opcional)</label>
-          <Input
-            placeholder="Ej: dolor lumbar, primera sesión..."
-            value={notas}
-            onChange={(e) => setNotas(e.target.value)}
-          />
+              {/* Buscador */}
+              {!mostrarNuevoPaciente && (
+                <PacienteAutocomplete
+                  value={pacienteId}
+                  onChange={(id) => {
+                    setPacienteId(id)
+                    setMostrarNuevoPaciente(false)
+                  }}
+                />
+              )}
+
+              {/* Formulario nuevo paciente inline */}
+              {mostrarNuevoPaciente && !pacienteId && (
+                <div className="rounded-lg border border-primary/30 bg-primary/5 p-3">
+                  <div className="mb-3 flex items-center justify-between">
+                    <p className="text-sm font-semibold">Nuevo paciente</p>
+                    <button
+                      type="button"
+                      onClick={() => setMostrarNuevoPaciente(false)}
+                      className="text-xs text-muted-foreground hover:underline"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Input placeholder="Nombre *" value={npNombre} onChange={(e) => setNpNombre(e.target.value)} />
+                    <Input placeholder="Apellido *" value={npApellido} onChange={(e) => setNpApellido(e.target.value)} />
+                    <Input placeholder="DNI *" value={npDni} onChange={(e) => setNpDni(e.target.value)} />
+                    <Input placeholder="Teléfono *" value={npTelefono} onChange={(e) => setNpTelefono(e.target.value)} />
+                    <Input placeholder="Obra social (opcional)" value={npObraSocial} onChange={(e) => setNpObraSocial(e.target.value)} />
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <label className="mb-2 block text-sm font-semibold">Notas (opcional)</label>
+              <Input
+                placeholder="Ej: dolor lumbar, primera sesión..."
+                value={notas}
+                onChange={(e) => setNotas(e.target.value)}
+              />
+            </CardContent>
+          </Card>
         </div>
 
         {error && <p className="text-sm text-destructive">{error}</p>}
+      </div>
 
-        <Button onClick={handleSubmit} disabled={saving} className="w-full">
+      {/* Footer fijo */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 flex justify-center border-t bg-background/95 p-4 backdrop-blur-sm">
+        <Button onClick={handleSubmit} disabled={saving} className="w-full max-w-xs">
           {saving ? 'Guardando...' : 'Confirmar turno'}
         </Button>
       </div>

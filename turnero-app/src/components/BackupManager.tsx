@@ -75,7 +75,7 @@ export default function BackupManager() {
 
   return (
     <div>
-      <label className="mb-2 block text-sm font-medium">Backup</label>
+      <label className="mb-2 block text-sm font-semibold">Backup</label>
 
       {config?.ultimoBackup && (
         <p className="mb-2 text-xs text-muted-foreground">

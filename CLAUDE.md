@@ -99,6 +99,7 @@ npm run typecheck    # tsc --noEmit
 - Repositorios: kebab + `.repo.ts` (`turno.repo.ts`)
 - Idioma del código: inglés para nombres de funciones/variables, español para textos de UI y specs
 - Commits: mensajes concisos en español
+- **NUNCA hacer `git push` sin que el usuario lo pida explícitamente.** Solo commit local; el push lo decide el usuario.
 
 ## Estado actual del proyecto
 
@@ -106,11 +107,12 @@ npm run typecheck    # tsc --noEmit
 - [x] Spec técnico v1 (puntos abiertos resueltos)
 - [x] Resolución de puntos abiertos de ambos specs
 - [x] Task decomposition (36 tareas en 5 fases)
-- [ ] Fase 1 — Setup y Datos (9 tareas)
-- [ ] Fase 2 — Pantallas Principales (9 tareas)
-- [ ] Fase 3 — PWA + Offline (5 tareas)
-- [ ] Fase 4 — Config, Notificaciones y Backup (8 tareas)
-- [ ] Fase 5 — Deploy y Distribución (5 tareas)
+- [x] Fase 1 — Setup y Datos (9 tareas)
+- [x] Fase 2 — Pantallas Principales (9 tareas)
+- [x] Fase 3 — PWA + Offline (5 tareas)
+- [x] Fase 4 — Config, Notificaciones y Backup (8 tareas)
+- [x] Fase 5 — Deploy y Distribución (5 tareas)
+- [x] Mejoras UX: paleta teal, estadísticas en Dashboard, layout Cards en grid
 
 ## Skills disponibles
 

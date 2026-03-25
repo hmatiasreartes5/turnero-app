@@ -4,9 +4,9 @@
 
 | Componente | Tecnología | Justificación |
 |------------|-----------|---------------|
-| Framework | React 18+ con Vite | Ecosistema maduro, gran comunidad, build rápido con Vite |
+| Framework | React 19 con Vite 8 | Ecosistema maduro, gran comunidad, build rápido con Vite |
 | Lenguaje | TypeScript (strict mode) | Type-safety en toda la app, previene errores en tiempo de compilación |
-| Estilos | Tailwind CSS 3+ | Utility-first, mobile-first por defecto, sin CSS custom |
+| Estilos | Tailwind CSS 4 | Utility-first, mobile-first por defecto, paleta teal personalizada via CSS variables oklch |
 | UI Components | shadcn/ui | Componentes accesibles, customizables, no es dependencia (se copia al proyecto) |
 | Base de datos | Dexie.js 4+ (wrapper IndexedDB) | API tipo ORM con promesas, reactive queries, soporte offline nativo |
 | Routing | React Router v6 | SPA routing estándar en React |
@@ -106,6 +106,7 @@ interface Paciente {
   dni: string;              // requerido, único
   telefono: string;         // requerido
   obraSocial?: string;
+  numeroAfiliado?: string;  // número de afiliado de la obra social
   email?: string;
   notas?: string;           // notas clínicas generales
   createdAt: string;        // ISO 8601
@@ -254,14 +255,16 @@ turnero-pwa/
 │   │   └── Onboarding.tsx
 │   │
 │   ├── components/                  # Componentes reutilizables
-│   │   ├── ui/                      # shadcn/ui (Button, Input, Dialog, etc.)
-│   │   ├── TurnoCard.tsx
-│   │   ├── PacienteSearch.tsx
-│   │   ├── HorarioSelector.tsx
-│   │   ├── AgendaTimeline.tsx
-│   │   ├── BackupManager.tsx
+│   │   ├── ui/                      # shadcn/ui (Button, Input, Card, Dialog, etc.)
+│   │   ├── TurnoCard.tsx            # Card de turno con paciente, obra social y estado
+│   │   ├── PacienteAutocomplete.tsx # Buscador con autocomplete y click-outside
+│   │   ├── HorarioSelector.tsx      # Selector de slots disponibles
+│   │   ├── BackupManager.tsx        # Export/import con diálogo de confirmación
+│   │   ├── BackupReminder.tsx       # Banner de recordatorio de backup (7 días)
 │   │   ├── InstallBanner.tsx        # Banner "Agregar a pantalla de inicio"
-│   │   └── Layout.tsx               # Layout con tab bar
+│   │   ├── UpdateToast.tsx          # Toast de actualización PWA disponible
+│   │   ├── ErrorBoundary.tsx        # Error boundary global
+│   │   └── Layout.tsx               # Layout con tab bar (Home, Agenda, Pacientes, Config)
 │   │
 │   ├── repositories/                # Capa de datos (Repository Pattern)
 │   │   ├── database.ts              # Instancia Dexie + schema

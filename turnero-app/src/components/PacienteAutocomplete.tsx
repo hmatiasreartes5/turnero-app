@@ -95,7 +95,7 @@ export default function PacienteAutocomplete({ value, onChange }: PacienteAutoco
       </div>
 
       {open && (
-        <div className="absolute left-0 right-0 z-10 mt-1 max-h-48 overflow-y-auto rounded-md border bg-popover shadow-md">
+        <div className="absolute left-0 right-0 z-50 mt-1 max-h-48 overflow-y-auto rounded-md border bg-popover shadow-md">
           {filtered.length === 0 ? (
             <p className="p-3 text-sm text-muted-foreground">
               {query ? 'Sin resultados' : 'No hay pacientes'}
