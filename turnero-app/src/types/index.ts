@@ -28,6 +28,7 @@ export interface Paciente {
   dni: string // único
   telefono: string
   obraSocial?: string
+  numeroAfiliado?: string
   email?: string
   notas?: string
   createdAt: string // ISO 8601

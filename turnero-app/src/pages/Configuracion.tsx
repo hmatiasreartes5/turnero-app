@@ -68,7 +68,9 @@ export default function Configuracion() {
 
   const agregarPrecio = async () => {
     if (!nuevoPrecioNombre || !nuevoPrecioValor) return
-    const precios = { ...config.precios, [nuevoPrecioNombre]: Number(nuevoPrecioValor) }
+    const valor = Number(nuevoPrecioValor)
+    if (valor < 0) return
+    const precios = { ...config.precios, [nuevoPrecioNombre]: valor }
     await configRepo.update({ precios })
     setNuevoPrecioNombre('')
     setNuevoPrecioValor('')
@@ -183,6 +185,7 @@ export default function Configuracion() {
             />
             <Input
               type="number"
+              min="0"
               placeholder="$"
               value={nuevoPrecioValor}
               onChange={(e) => setNuevoPrecioValor(e.target.value)}

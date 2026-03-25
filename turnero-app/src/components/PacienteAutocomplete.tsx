@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
@@ -13,6 +13,18 @@ interface PacienteAutocompleteProps {
 export default function PacienteAutocomplete({ value, onChange }: PacienteAutocompleteProps) {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // Cerrar al hacer click afuera
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const paciente = useLiveQuery(
     () => (value ? db.pacientes.get(value) : undefined),
@@ -29,7 +41,7 @@ export default function PacienteAutocomplete({ value, onChange }: PacienteAutoco
   useEffect(() => {
     if (!allPacientes) return
     if (!query.trim()) {
-      setFiltered(allPacientes.slice(0, 10))
+      setFiltered(allPacientes.slice(0, 5))
       return
     }
     const q = query.toLowerCase().trim()
@@ -41,7 +53,7 @@ export default function PacienteAutocomplete({ value, onChange }: PacienteAutoco
             p.apellido.toLowerCase().includes(q) ||
             p.dni.includes(q),
         )
-        .slice(0, 10),
+        .slice(0, 5),
     )
   }, [query, allPacientes])
 
@@ -67,7 +79,7 @@ export default function PacienteAutocomplete({ value, onChange }: PacienteAutoco
   }
 
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input

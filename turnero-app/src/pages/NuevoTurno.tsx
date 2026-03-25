@@ -34,6 +34,7 @@ export default function NuevoTurno() {
   const [npApellido, setNpApellido] = useState('')
   const [npDni, setNpDni] = useState('')
   const [npTelefono, setNpTelefono] = useState('')
+  const [npObraSocial, setNpObraSocial] = useState('')
 
   const handleSubmit = async () => {
     setError('')
@@ -73,6 +74,7 @@ export default function NuevoTurno() {
           apellido: npApellido,
           dni: npDni,
           telefono: npTelefono,
+          obraSocial: npObraSocial || undefined,
         })
         finalPacienteId = nuevoPaciente.id
       }
@@ -188,6 +190,7 @@ export default function NuevoTurno() {
               <Input placeholder="Apellido *" value={npApellido} onChange={(e) => setNpApellido(e.target.value)} />
               <Input placeholder="DNI *" value={npDni} onChange={(e) => setNpDni(e.target.value)} />
               <Input placeholder="Teléfono *" value={npTelefono} onChange={(e) => setNpTelefono(e.target.value)} />
+              <Input placeholder="Obra social (opcional)" value={npObraSocial} onChange={(e) => setNpObraSocial(e.target.value)} />
             </div>
           </div>
         )}

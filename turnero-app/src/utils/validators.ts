@@ -40,6 +40,7 @@ export const pacienteSchema = z.object({
   dni: z.string().regex(DNI_REGEX, 'DNI debe tener 7 u 8 dígitos'),
   telefono: z.string().regex(TELEFONO_REGEX, 'Teléfono inválido'),
   obraSocial: z.string().optional(),
+  numeroAfiliado: z.string().optional(),
   email: z.string().email('Email inválido').optional().or(z.literal('')),
   notas: z.string().optional(),
   createdAt: z.string().datetime(),

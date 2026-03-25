@@ -38,6 +38,9 @@ export default function TurnoCard({ turno }: TurnoCardProps) {
           <p className="truncate font-medium">
             {paciente ? `${paciente.apellido}, ${paciente.nombre}` : 'Cargando...'}
           </p>
+          {paciente?.obraSocial && (
+            <p className="truncate text-xs text-muted-foreground">{paciente.obraSocial}</p>
+          )}
           {turno.notas && (
             <p className="truncate text-xs text-muted-foreground">{turno.notas}</p>
           )}

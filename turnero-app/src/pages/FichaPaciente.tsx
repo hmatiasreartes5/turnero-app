@@ -37,6 +37,7 @@ export default function FichaPaciente() {
     telefono: '',
     email: '',
     obraSocial: '',
+    numeroAfiliado: '',
     notas: '',
   })
 
@@ -49,6 +50,7 @@ export default function FichaPaciente() {
       telefono: paciente.telefono,
       email: paciente.email || '',
       obraSocial: paciente.obraSocial || '',
+      numeroAfiliado: paciente.numeroAfiliado || '',
       notas: paciente.notas || '',
     })
     setEditing(true)
@@ -79,6 +81,7 @@ export default function FichaPaciente() {
       telefono: form.telefono,
       email: form.email || undefined,
       obraSocial: form.obraSocial || undefined,
+      numeroAfiliado: form.numeroAfiliado || undefined,
       notas: form.notas || undefined,
     })
     setEditing(false)
@@ -111,6 +114,7 @@ export default function FichaPaciente() {
             <Input placeholder="Teléfono *" value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} />
             <Input placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
             <Input placeholder="Obra social" value={form.obraSocial} onChange={(e) => setForm({ ...form, obraSocial: e.target.value })} />
+            <Input placeholder="N° de afiliado" value={form.numeroAfiliado} onChange={(e) => setForm({ ...form, numeroAfiliado: e.target.value })} />
             <Input placeholder="Notas clínicas" value={form.notas} onChange={(e) => setForm({ ...form, notas: e.target.value })} />
             {error && <p className="text-sm text-destructive">{error}</p>}
             <div className="flex gap-2">
@@ -130,7 +134,7 @@ export default function FichaPaciente() {
             <div className="flex flex-col gap-1 text-sm">
               <p>Tel: {paciente.telefono}</p>
               {paciente.email && <p>Email: {paciente.email}</p>}
-              {paciente.obraSocial && <p>Obra social: {paciente.obraSocial}</p>}
+              {paciente.obraSocial && <p>Obra social: {paciente.obraSocial}{paciente.numeroAfiliado ? ` (${paciente.numeroAfiliado})` : ''}</p>}
               {paciente.notas && (
                 <p className="mt-2 text-muted-foreground">Notas: {paciente.notas}</p>
               )}
